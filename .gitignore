@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+PASSAGEM.md
+docs/captura-*.png

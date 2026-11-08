@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orquestra</title>
+<link rel="stylesheet" href="/app.css">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="app">
+  <header class="topo">
+    <div class="marca"><img class="logo" src="logo.svg" alt="Orquestra"><div><b>Orquestra</b><small id="sub">carregando…</small></div></div>
+    <nav id="abas" role="tablist">
+      <button data-aba="visao" class="on">Visão geral</button>
+      <button data-aba="aovivo">Ao vivo</button>
+      <button data-aba="tarefas">Tarefas</button>
+      <button data-aba="conversa">Conversa</button>
+      <button data-aba="dia">Dia</button>
+      <button data-aba="seller">Seller Turbo</button>
+      <button data-aba="custos">Custos</button>
+      <button data-aba="metricas">Métricas</button>
+      <button data-aba="melhorias">Melhorias</button>
+      <button data-aba="projetos">Projetos</button>
+      <button data-aba="skills">Skills</button>
+    </nav>
+    <div class="pulso" id="pulso" title="última coleta"><i></i><span>—</span></div>
+  </header>
+  <main id="main"></main>
+</div>
+<div class="modal" id="modal" hidden><div class="caixa"><h3 id="m-t"></h3><p id="m-p"></p>
+  <div class="acoes"><button id="m-n" class="sec">Cancelar</button><button id="m-s">Confirmar</button></div></div></div>
+<script src="/app.js"></script>
+</body>
+</html>

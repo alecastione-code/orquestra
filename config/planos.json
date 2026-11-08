@@ -1,0 +1,7 @@
+{
+  "_aviso": "O limite do Claude NÃO se digita aqui: as IAs informam as próprias janelas (`orq cotas-informar`). Só o valor semanal do plano do Codex serve de base para o R$ equivalente.",
+  "vigencia": "2026-11-01",
+  "codex": {
+    "valor_semanal_brl": 220.0
+  }
+}

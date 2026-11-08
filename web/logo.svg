@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>Orquestra</title>
+  <desc>Um núcleo laranja conduz três linhas de trabalho paralelas.</desc>
+  <rect x="24" y="24" width="976" height="976" rx="216" fill="#24242A"/>
+  <g transform="translate(512 512) scale(1.25) translate(-512 -512)">
+    <g fill="none" stroke="#F1F0EC" stroke-width="51" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M354 512 C468 512 471 340 584 340 H716"/>
+      <path d="M354 512 H716"/>
+      <path d="M354 512 C468 512 471 684 584 684 H716"/>
+    </g>
+    <circle cx="354" cy="512" r="77" fill="#F97316"/>
+    <g fill="#F97316">
+      <circle cx="738" cy="340" r="37"/>
+      <circle cx="738" cy="512" r="37"/>
+      <circle cx="738" cy="684" r="37"/>
+    </g>
+  </g>
+</svg>

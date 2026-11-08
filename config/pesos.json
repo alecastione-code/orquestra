@@ -1,0 +1,5 @@
+{
+  "_aviso": "Pesos INICIAIS para estimar o uso das janelas do plano Claude entre duas leituras reais. O fator (pontos por token ponderado) é recalibrado sozinho a cada leitura nova; só a proporção entre os pesos importa.",
+  "modelos": {"fable": 5.0, "opus": 3.0, "sonnet": 1.0, "haiku": 0.3},
+  "tokens": {"entrada": 1.0, "saida": 5.0, "cache_escrita": 1.25, "cache_leitura": 0.01}
+}

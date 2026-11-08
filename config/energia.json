@@ -1,0 +1,6 @@
+{
+  "_aviso": "ESTIMATIVA: potência média por núcleo ocupado, potência do runner local e tarifa de energia. Edite.",
+  "watts_por_nucleo": 10.0,
+  "watts_runner": 60.0,
+  "tarifa_kwh_brl": 0.95
+}

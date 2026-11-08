@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><link rel="stylesheet" href="/app.css"></head>
+<body>
+<div class="app"><header class="topo"><div class="marca"><div><b>Orquestra</b><small id="sub"></small></div></div>
+<nav id="abas"><button data-aba="visao" class="on">Visão</button><button data-aba="aovivo">Ao vivo</button><button data-aba="tarefas">Tarefas</button>
+<button data-aba="custos">Custos</button><button data-aba="metricas">Métricas</button><button data-aba="melhorias">Melhorias</button><button data-aba="skills">Skills</button></nav>
+<div class="pulso" id="pulso"><i></i><span>—</span></div></header><main id="main"></main></div>
+<div class="modal" id="modal" hidden><div class="caixa"><h3 id="m-t"></h3><p id="m-p"></p><div class="acoes"><button id="m-n">n</button><button id="m-s">s</button></div></div></div>
+<script>
+// Duas coletas IGUAIS: a primeira resposta de cada GET é guardada e repetida (o servidor real muda 'agora' a cada chamada).
+window.__cache = {}; const rf = window.fetch.bind(window);
+window.fetch = location.search.includes("real") ? rf : async (u, o) => { if (!o) { if (!__cache[u]) { __cache[u] = await (await rf(u)).text(); } return new Response(__cache[u], { headers: { "Content-Type": "application/json" } }); } return rf(u, o); };
+window.__anim = 0; document.addEventListener("animationstart", () => window.__anim++, true);
+</script>
+<script src="/app.js"></script>
+<script>
+(async () => {
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  // O contador de `animationstart` é só informativo: no Chrome headless o 1º quadro pode chegar tarde e contar animações da
+  // renderização inicial. O que prova "não pisca" é zero mutações no DOM (animação só reinicia se o nó for recriado ou mudar de classe).
+  const assentar = () => wait(900);
+  const esperarPor = async (sel, tentativas = 60) => { for (let i = 0; i < tentativas && !document.querySelector(sel); i++) await wait(200); return document.querySelector(sel); };
+  const main = document.querySelector("#main"), res = { mutacoes: {}, animacoes: {} };
+  if (location.search.includes("real")) {   // "gravação" de 10 s com dados reais mudando: nós de elemento não podem ser trocados
+    res.real = {};
+    for (const a of ["visao", "aovivo", "custos"]) {
+      document.querySelector('#abas [data-aba="' + a + '"]').click(); await carregar(); await assentar();
+      let estrut = 0, textos = 0, animas = 0; window.__anim = 0;
+      const mo = new MutationObserver((ms) => { for (const m of ms) { if (m.type === "childList") estrut += [...m.addedNodes, ...m.removedNodes].filter((x) => x.nodeType === 1).length; else textos++; } });
+      mo.observe(main, { subtree: true, childList: true, attributes: true, characterData: true });
+      await wait(10000); mo.takeRecords(); mo.disconnect();
+      res.real[a] = { estruturais: estrut, textos: textos, animacoes: window.__anim };
+    }
+    document.body.setAttribute("data-res", JSON.stringify(res)); return;
+  }
+  for (const a of ["visao", "aovivo", "tarefas", "custos", "metricas", "melhorias", "skills"]) {
+    document.querySelector('#abas [data-aba="' + a + '"]').click(); await carregar(); await assentar();   // espera a 1ª renderização terminar de verdade
+    window.__anim = 0; let n = 0;
+    const mo = new MutationObserver((m) => { n += m.length; }); mo.observe(main, { subtree: true, childList: true, attributes: true, characterData: true });
+    await carregar(); await carregar(); await wait(400);
+    n += mo.takeRecords().length; mo.disconnect();
+    res.mutacoes[a] = n; res.animacoes[a] = window.__anim;
+  }
+  // foco, texto digitado, aba e rolagem sobrevivem a uma nova coleta igual
+  document.querySelector('#abas [data-aba="visao"]').click(); await carregar(); await assentar();
+  const campo = main.querySelector("input"); campo.focus(); campo.value = "consertar bug";
+  document.scrollingElement.scrollTop = 150; const topo = document.scrollingElement.scrollTop;
+  await carregar(); await wait(300);
+  res.foco = { mesmoNo: main.querySelector("input") === campo, ativo: document.activeElement === campo, valor: main.querySelector("input").value, scroll: document.scrollingElement.scrollTop === topo,
+               aba: document.querySelector("#abas .on").dataset.aba };
+  // fluxos com estado: o resultado do "Recomendar" e o filtro de skills sobrevivem à coleta seguinte (handlers falam com o DOM vivo)
+  campo.value = "varrer logs"; main.querySelector("section.card.c12 button.btn").click(); await esperarPor("#main .resp b"); await wait(200);
+  await carregar(); await wait(300);
+  res.fluxos = { recomendacao: !!main.querySelector(".resp b") && /Nível/.test(main.textContent) };
+  document.querySelector('#abas [data-aba="skills"]').click(); await esperarPor("#sk-busca"); await carregar(); await wait(300);
+  const total = main.querySelectorAll(".skill").length, busca = main.querySelector("#sk-busca");
+  busca.value = "zzzz-nenhuma"; busca.dispatchEvent(new Event("input", { bubbles: true })); await wait(200);
+  const filtradas = main.querySelectorAll(".skill").length; await carregar(); await wait(300);
+  res.fluxos.filtro = { antes: total, filtrado: filtradas, depoisDeColeta: main.querySelectorAll(".skill").length, campoMesmoNo: main.querySelector("#sk-busca") === busca };
+  // dado que MUDA: só o nó afetado muda (o texto novo aparece)
+  document.body.setAttribute("data-res", JSON.stringify(res));
+})();
+</script></body></html>

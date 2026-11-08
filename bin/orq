@@ -1,0 +1,6 @@
+#!/bin/bash
+# Resolve links simbólicos (instalado em ~/.local/bin/orq) e chama o pacote.
+f="$0"
+while [ -L "$f" ]; do d="$(cd "$(dirname "$f")" && pwd)"; f="$(readlink "$f")"; [[ "$f" != /* ]] && f="$d/$f"; done
+raiz="$(cd "$(dirname "$f")/.." && pwd)"
+PYTHONPATH="$raiz" exec /usr/bin/env python3 -m orquestra.cli "$@"
